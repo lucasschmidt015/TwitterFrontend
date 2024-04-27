@@ -9,7 +9,7 @@ const tweets = [
         'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.png',
     },
     createdAt: '2020-08-27T12:00:00.000Z',
-    content: 'Can you please check if the Subscribe button on Youtube works?',
+    content: 'Does someone is watching the game?',
     image:
       'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/thumbnail.png',
     numberOfComments: 123,

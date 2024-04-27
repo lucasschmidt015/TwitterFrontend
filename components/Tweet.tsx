@@ -1,7 +1,9 @@
 import { StyleSheet, Image } from 'react-native';
 import { Text, View } from '@/components/Themed';
+import { Entypo } from '@expo/vector-icons';
 
-import { User, TweetType } from '@/types';
+import { TweetType } from '@/types';
+import IconButton from './iconButton';
 
 type TweetProps = {
   tweet: TweetType;
@@ -16,8 +18,26 @@ const Tweet = ({ tweet }: TweetProps) => {
             />
 
             <View style={styles.mainContainer}>
-            <Text style={styles.name}>{ tweet.user.name }</Text>
-            <Text style={styles.content}>{ tweet.content }</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.name}>{ tweet.user.name }</Text>
+                <Text style={styles.username}>{ tweet.user.username } ·2h</Text>
+                <Entypo name="dots-three-horizontal" size={16} color="gray" style={{ marginLeft: 'auto', marginRight: 5 }} />
+              </View>
+
+              <Text style={styles.content}>{ tweet.content }</Text>
+
+              { tweet.image && <Image src={tweet.image} style={styles.image}/> }
+
+              <View style={styles.footer}>
+
+                <IconButton iconName='comment' textContent={tweet.numberOfComments} />
+                <IconButton iconName='retweet' textContent={tweet.numberOfRetweets} />
+                <IconButton iconName='heart' textContent={tweet.numberOfLikes} />
+                <IconButton iconName='chart' textContent={tweet.impressions || 0} />
+                <IconButton iconName='share-apple'/>
+
+              </View>
+
             </View>
         </View>
     );
@@ -43,10 +63,25 @@ const styles = StyleSheet.create({
       name: {
         fontWeight: '600'
       },
+      username: {
+        color: 'gray',
+        marginLeft: 5
+      },
       content: {
         lineHeight: 20,
         marginTop: 5,
-      }
+      },
+      image: {
+        width: '100%',
+        aspectRatio: 16 / 9,
+        marginVertical: 10,
+        borderRadius: 15
+      },
+      footer: {
+        flexDirection: 'row',
+        marginVertical: 5,
+        justifyContent: 'space-between'
+      },
 })
 
 export default Tweet;
