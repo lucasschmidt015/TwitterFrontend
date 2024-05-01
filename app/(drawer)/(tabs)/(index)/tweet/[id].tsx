@@ -1,6 +1,6 @@
 import { useGlobalSearchParams } from 'expo-router';
-import Tweet from '../../components/Tweet';
-import tweets from '../../assets/data/tweets';
+import Tweet from '../../../../../components/Tweet';
+import tweets from '../../../../../assets/data/tweets';
 import { Text } from 'react-native';
 
 
