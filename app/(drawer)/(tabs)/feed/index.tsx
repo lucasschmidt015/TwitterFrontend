@@ -1,10 +1,45 @@
 import { StyleSheet, FlatList, View, Pressable } from 'react-native';
 import Tweet from '@/components/Tweet';
-import tweets from '@/assets/data/tweets';
+//import tweets from '@/assets/data/tweets';
 import { Entypo } from '@expo/vector-icons';
 import { Link } from 'expo-router';
+import { useEffect, useState } from 'react';
 
-export default function TabOneScreen() {
+export default function FeedScrean() {
+
+  const [tweets, setTweets] = useState([]);
+
+  useEffect(() => {
+    const fetchTweets = async () => {
+      //Fetch tweets from: http://localhost:3000/tweet/
+      const url = "http://localhost:3000/tweet/"
+      const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklkIjoyNH0.rqG43IV_xgkYNHZbwt3B0WYd4CgLUwPIafRVsdkR01w';
+
+      try {
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        });
+
+        if (res.status !== 200) {
+          console.log("Error fetching the API");
+        }
+
+        const data = await res.json();
+
+        console.log('data: ', data);
+
+        setTweets(data);
+        
+      } catch (e) {
+        console.log('Error: ', e);
+      }
+    }
+
+    fetchTweets();
+  }, []);
+
   return (
     <View style={styles.page}>
       <FlatList data={ tweets } renderItem={ ({ item }) => <Tweet tweet={item} />}/>
