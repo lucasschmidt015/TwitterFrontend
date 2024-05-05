@@ -1,48 +1,30 @@
-import { StyleSheet, FlatList, View, Pressable } from 'react-native';
+import { StyleSheet, FlatList, View, Pressable, ActivityIndicator, Text } from 'react-native';
 import Tweet from '@/components/Tweet';
-//import tweets from '@/assets/data/tweets';
+// import tweets from '@/assets/data/tweets';
 import { Entypo } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { listTweets } from '@/lib/api/tweets';
+import { useQuery } from '@tanstack/react-query';
 
 export default function FeedScrean() {
 
-  const [tweets, setTweets] = useState([]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['tweets'],
+    queryFn: listTweets,
+  })
 
-  useEffect(() => {
-    const fetchTweets = async () => {
-      //Fetch tweets from: http://localhost:3000/tweet/
-      const url = "http://localhost:3000/tweet/"
-      const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklkIjoyNH0.rqG43IV_xgkYNHZbwt3B0WYd4CgLUwPIafRVsdkR01w';
+  if (isLoading) {
+    return <ActivityIndicator />
+  }
 
-      try {
-        const res = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        });
-
-        if (res.status !== 200) {
-          console.log("Error fetching the API");
-        }
-
-        const data = await res.json();
-
-        console.log('data: ', data);
-
-        setTweets(data);
-        
-      } catch (e) {
-        console.log('Error: ', e);
-      }
-    }
-
-    fetchTweets();
-  }, []);
+  if (error) {
+    return <Text>{ error.message }</Text>
+  }
 
   return (
     <View style={styles.page}>
-      <FlatList data={ tweets } renderItem={ ({ item }) => <Tweet tweet={item} />}/>
+      <FlatList data={ data } renderItem={ ({ item }) => <Tweet tweet={item} />}/>
 
       <Link href={'/new-tweet'} asChild>
         <Pressable style={styles.floatingButton}>
