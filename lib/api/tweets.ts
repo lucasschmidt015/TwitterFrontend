@@ -23,3 +23,26 @@ export const listTweets = async () => {
       throw new Error("Error fetching tweets");
     }
 }
+
+export const getSingleTweet = async (tweetId: string) => {
+  try {
+    const res = await fetch(`${API_URL}/tweet/${tweetId}`, {
+      headers: { 
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+
+    if (res.status == 401) {
+      throw new Error("Not authorized. Please sign in");
+    }
+
+    if (res.status !== 200) {
+      throw new Error("Error fetching the tweet");
+    }
+
+    return await res.json();
+    
+  } catch (e) {
+    throw new Error("Error fetching a specific tweet.");
+  }
+}

@@ -1,21 +1,29 @@
 import { useGlobalSearchParams } from 'expo-router';
 import Tweet from '../../../../../components/Tweet';
-import tweets from '../../../../../assets/data/tweets';
-import { Text } from 'react-native';
+import { Text, ActivityIndicator } from 'react-native';
+import { useQuery } from '@tanstack/react-query';
+import { getSingleTweet } from '@/lib/api/tweets';
 
 
 export default function TweetScreen() {
 
     const { id } = useGlobalSearchParams();
 
-    const tweet = tweets.find(t => t.id === id);
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['tweet', id],
+        queryFn: () => getSingleTweet(id as string)
+    })
 
-    if (!tweet) {
-        return <Text>Tweet {id} not found</Text>
+    if (isLoading) {
+        return <ActivityIndicator />
+    }
+    
+    if (error) {
+        return <Text> {error.message} </Text>
     }
 
     return (
-        <Tweet tweet={tweet}/>
+        <Tweet tweet={data}/>
     );
 }
 
