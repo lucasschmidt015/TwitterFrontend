@@ -1,6 +1,8 @@
-import { View, StyleSheet, Text, Image, TextInput, Pressable, SafeAreaView } from "react-native";
+import { View, StyleSheet, Text, Image, TextInput, Pressable, SafeAreaView, ActivityIndicator } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
+import { postNewTweet } from "@/lib/api/tweets";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const user = {
     id: '123456789',
@@ -14,9 +16,27 @@ export default function NewTweet() {
     const [tweetText, setTweetText] = useState('');
     const router = useRouter();
 
-    const onTweetPress = () => {
-        setTweetText('');
-        router.back();
+    const queryClient = useQueryClient();
+
+    const { mutateAsync, isLoading, isError, error } = useMutation({
+        mutationFn: postNewTweet,
+        onSuccess: (data) => {
+            // queryClient.invalidateQueries({ queryKey: ['tweets'] });
+            queryClient.setQueriesData(['tweets'], (existingTweets) => {
+                return [data, ...existingTweets]
+            });
+        }
+    });
+
+    const onTweetPress = async () => {
+
+        try {
+            await mutateAsync({ content: tweetText });
+            setTweetText('');
+            router.back();
+        } catch (e) {
+            console.log("Error: ", e);
+        }
     }
 
     return (
@@ -24,7 +44,7 @@ export default function NewTweet() {
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
                     <Link href="../" style={{ fontSize: 18 }}>Cancel</Link>
-                    
+                    {isLoading && <ActivityIndicator/>}
                     <Pressable onPress={onTweetPress} style={styles.button}>
                         <Text style={styles.buttonText}>Tweet</Text>
                     </Pressable>
@@ -41,6 +61,7 @@ export default function NewTweet() {
                         onChangeText={setTweetText}
                     />
                 </View>
+                {isError && <Text>Error: {error.message}</Text>}
             </View>
         </SafeAreaView>
     );

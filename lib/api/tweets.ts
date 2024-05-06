@@ -46,3 +46,30 @@ export const getSingleTweet = async (tweetId: string) => {
     throw new Error("Error fetching a specific tweet.");
   }
 }
+
+export const postNewTweet = async (data: { content: string }) => {
+  try {
+    const res = await fetch(`${API_URL}/tweet`, {
+      method: 'POST',
+      headers: { 
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (res.status == 401) {
+      throw new Error("Not authorized. Please sign in");
+    }
+
+    if (res.status !== 201) {
+      throw new Error("Error creating tweet");
+    }
+
+    return await res.json();
+
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}
