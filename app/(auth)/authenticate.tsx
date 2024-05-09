@@ -1,6 +1,7 @@
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native'
+import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { useGlobalSearchParams } from 'expo-router';
+import { authenticate } from '@/lib/api/auth';
 
 export default function Authenticate() {
 
@@ -9,6 +10,14 @@ export default function Authenticate() {
 
     const onPressConfirm = async () => {
         
+      try {
+
+        const res = await authenticate({ email: email as string, emailToken: code as string });
+        console.log(res);
+
+      } catch (err) {
+        Alert.alert('Error', "Email code doesn't metch");
+      }
     }
 
   return (
