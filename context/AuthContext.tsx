@@ -27,10 +27,7 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
         const loadApplicationToken = async () => {
             const storedToken = await SecureStore.getItemAsync('authToken');
 
-            console.log('stored token <----- ', storedToken);
-
             if (storedToken) {
-                console.log('Is it passing here? ');
                 setAuthToken(storedToken);
             }
         }

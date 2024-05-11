@@ -1,8 +1,8 @@
 import { View, StyleSheet, Text, Image, TextInput, Pressable, SafeAreaView, ActivityIndicator } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { postNewTweet } from "@/lib/api/tweets";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { tweetsApi } from "@/lib/api/tweets";
 
 const user = {
     id: '123456789',
@@ -12,6 +12,8 @@ const user = {
 }
 
 export default function NewTweet() {
+
+    const { postNewTweet } = tweetsApi();
 
     const [tweetText, setTweetText] = useState('');
     const router = useRouter();

@@ -2,10 +2,11 @@ import { useGlobalSearchParams } from 'expo-router';
 import Tweet from '../../../../../components/Tweet';
 import { Text, ActivityIndicator } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
-import { getSingleTweet } from '@/lib/api/tweets';
-
+import { tweetsApi } from '@/lib/api/tweets';
 
 export default function TweetScreen() {
+
+    const { getSingleTweet } = tweetsApi();
 
     const { id } = useGlobalSearchParams();
 
