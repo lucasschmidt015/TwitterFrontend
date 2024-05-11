@@ -1,5 +1,6 @@
 import { useRouter, useSegments } from "expo-router";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import * as SecureStore from 'expo-secure-store';
 
 const AuthContext = createContext({});
 
@@ -22,8 +23,29 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
 
     }, [segments, authToken]);
 
+    useEffect(() => {
+        const loadApplicationToken = async () => {
+            const storedToken = await SecureStore.getItemAsync('authToken');
+
+            console.log('stored token <----- ', storedToken);
+
+            if (storedToken) {
+                console.log('Is it passing here? ');
+                setAuthToken(storedToken);
+            }
+        }
+        
+        loadApplicationToken();
+    }, []);
+
+    const updateAuthToken = async (newToken: string) => {
+        await SecureStore.setItemAsync('authToken', newToken);
+
+        setAuthToken(newToken);
+    }
+
     return (
-        <AuthContext.Provider value={{ authToken, setAuthToken }}>
+        <AuthContext.Provider value={{ authToken, updateAuthToken }}>
             {children}
         </AuthContext.Provider>
     );
