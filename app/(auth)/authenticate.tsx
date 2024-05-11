@@ -2,18 +2,22 @@ import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-nativ
 import React, { useState } from 'react'
 import { useGlobalSearchParams } from 'expo-router';
 import { authenticate } from '@/lib/api/auth';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Authenticate() {
 
     const [code, setCode] = useState('');
     const { email } = useGlobalSearchParams();
 
+    const { setAuthToken } = useAuth();
+
     const onPressConfirm = async () => {
         
       try {
 
         const res = await authenticate({ email: email as string, emailToken: code as string });
-        console.log(res);
+
+        setAuthToken(res.authToken);
 
       } catch (err) {
         Alert.alert('Error', "Email code doesn't metch");

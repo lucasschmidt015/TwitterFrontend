@@ -35,7 +35,7 @@ export default function SignIn() {
         style={styles.input}/>
 
       <Pressable style={styles.button} onPress={onPressSignIn}>
-        <Text style={styles.buttonText}>Sign im</Text>
+        <Text style={styles.buttonText}>Sign in</Text>
       </Pressable>
     </View>
   )
