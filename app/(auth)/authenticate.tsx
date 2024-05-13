@@ -17,7 +17,7 @@ export default function Authenticate() {
 
         const res = await authenticate({ email: email as string, emailToken: code as string });
 
-        await updateAuthToken(res.authToken);
+        await updateAuthToken(res.accessToken, res.refreshToken);
 
       } catch (err) {
         Alert.alert('Error', "Email code doesn't metch");

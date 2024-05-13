@@ -21,9 +21,9 @@ function CustomDrawerContent(props) {
 }
 
 export default function DrawerLayout() {
-    const { authToken } = useAuth();
+    const { accessToken } = useAuth();
 
-    if (!authToken) {
+    if (!accessToken) {
         return (
             <ActivityIndicator />
         )

@@ -7,18 +7,18 @@ const TweetsApiContext = createContext({});
 
 const TweetsApiContextProvider = ({ children }: PropsWithChildren) => {
 
-  const { authToken } = useAuth();
+  const { accessToken } = useAuth();
 
   const listTweets = async () => {
 
-      if (!authToken) {
+      if (!accessToken) {
         return;
       }
 
       try {
         const res = await fetch(`${API_URL}/tweet`, {
           headers: {
-            Authorization: `Bearer ${authToken}`
+            Authorization: `Bearer ${accessToken}`
           }
         });
         
@@ -40,14 +40,14 @@ const TweetsApiContextProvider = ({ children }: PropsWithChildren) => {
 
   const getSingleTweet = async (tweetId: string) => {
 
-    if (!authToken) {
+    if (!accessToken) {
       return;
     }
 
     try {
       const res = await fetch(`${API_URL}/tweet/${tweetId}`, {
         headers: { 
-          Authorization: `Bearer ${authToken}`
+          Authorization: `Bearer ${accessToken}`
         }
       });
 
@@ -68,7 +68,7 @@ const TweetsApiContextProvider = ({ children }: PropsWithChildren) => {
 
   const postNewTweet = async (data: { content: string }) => {
 
-    if (!authToken) {
+    if (!accessToken) {
       return;
     }
 
@@ -76,7 +76,7 @@ const TweetsApiContextProvider = ({ children }: PropsWithChildren) => {
       const res = await fetch(`${API_URL}/tweet`, {
         method: 'POST',
         headers: { 
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json' 
         },
         body: JSON.stringify(data)
