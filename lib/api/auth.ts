@@ -12,11 +12,12 @@ export const login = async (data: { email: string }) => {
         })
 
         if (res.status !== 200) {
-            throw new Error('Something went wrong. try again later.')            ;
+            const error = await res.json();
+            throw new Error(error.error);
         }
 
     } catch (err) {
-        throw new Error({ error: err });
+        throw new Error(err.message);
     }
 }
 

@@ -2,27 +2,24 @@ import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-nativ
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
 import { login } from '@/lib/api/auth';
+import ErrorMessage from '@/components/ErrorMessage';
 
 export default function SignIn() {
 
     const [email, setEmail] = useState('');
+    const [hasError, setHasError] = useState({});
     const router = useRouter();
 
     const onPressSignIn = async () => {
-        if (email.length) {
 
-          try {
+      try {
+        await login({ email });
 
-            await login({ email });
-            router.push({pathname: '/authenticate', params: { email }});
+        router.push({pathname: '/authenticate', params: { email }});
 
-          } catch(err) {
-            Alert.alert('Error', err.message);
-          }
-        }
-        else {
-            console.warn('Please, type your Email');
-        }
+      } catch(err) {
+        setHasError({ error: err.message });
+      }
     }
 
   return (
@@ -37,6 +34,7 @@ export default function SignIn() {
       <Pressable style={styles.button} onPress={onPressSignIn}>
         <Text style={styles.buttonText}>Sign in</Text>
       </Pressable>
+      { !hasError.error || <ErrorMessage message={hasError.error}/> }
     </View>
   )
 }
