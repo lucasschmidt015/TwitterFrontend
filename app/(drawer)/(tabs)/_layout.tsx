@@ -6,6 +6,8 @@ import { Pressable, Image } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { useAuth } from '@/context/AuthContext';
+
 
 
 export const unstable_settings = {
@@ -38,6 +40,12 @@ function AvatarHeader() {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { clearLogin } = useAuth();
+
+  //This function will logout the user;
+  const handleLogout = () => {
+    clearLogin();
+  }
 
   return (
     <Tabs
@@ -53,9 +61,9 @@ export default function TabLayout() {
           title: 'Feed',
           headerTitleAlign: 'center',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          //Here, we have to change the icon <------------
           headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
+              <Pressable onPress={handleLogout}> 
                 {({ pressed }) => (
                   <FontAwesome
                     name="info-circle"
@@ -65,7 +73,6 @@ export default function TabLayout() {
                   />
                 )}
               </Pressable>
-            </Link>
           ),
           headerLeft: () => (
             <AvatarHeader/>

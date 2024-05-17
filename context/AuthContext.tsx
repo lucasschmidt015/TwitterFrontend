@@ -43,7 +43,7 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
                     updateAuthToken(response?.UpdatedTokens.accessToken, response?.UpdatedTokens.refreshToken)
                 }
                 else {
-                    await deleteAuthToken();
+                    await clearLogin();
                 }
                 return;
             }
@@ -68,13 +68,18 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
         setRefreshToken(newRefreshToken);
     }
 
-    const deleteAuthToken = async () => {
+    const clearLogin = async () => {
         await SecureStore.deleteItemAsync('accessToken');
         await SecureStore.deleteItemAsync('refreshToken');
+
+        setAccessToken(null);
+        setRefreshToken(null);
+        
+        //setar as states aqui tbm
     }
 
     return (
-        <AuthContext.Provider value={{ accessToken, updateAuthToken }}>
+        <AuthContext.Provider value={{ accessToken, updateAuthToken, clearLogin }}>
             {children}
         </AuthContext.Provider>
     );
