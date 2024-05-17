@@ -68,7 +68,7 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
         setRefreshToken(newRefreshToken);
     }
 
-    const clearLogin = async () => {
+    const clearLogin = async () => { // <-------- We'll have to send a request to invalidate the token here
         await SecureStore.deleteItemAsync('accessToken');
         await SecureStore.deleteItemAsync('refreshToken');
 
