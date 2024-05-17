@@ -1,13 +1,14 @@
 import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router';
 import { login } from '@/lib/api/auth';
-import ErrorMessage from '@/components/ErrorMessage';
+import { generalContext } from '@/context/GeneralContext';
 
 export default function SignIn() {
 
+    const { showToast } = generalContext();
+
     const [email, setEmail] = useState('');
-    const [hasError, setHasError] = useState({});
     const router = useRouter();
 
     const onPressSignIn = async () => {
@@ -18,7 +19,12 @@ export default function SignIn() {
         router.push({pathname: '/authenticate', params: { email }});
 
       } catch(err) {
-        setHasError({ error: err.message });
+        showToast({
+          type: 'error',
+          text1: 'Opss!!!',
+          text2: err.message,
+          visibilityTime: 5000,
+        });
       }
     }
 
@@ -34,7 +40,6 @@ export default function SignIn() {
       <Pressable style={styles.button} onPress={onPressSignIn}>
         <Text style={styles.buttonText}>Sign in</Text>
       </Pressable>
-      { !hasError.error || <ErrorMessage message={hasError.error}/> }
     </View>
   )
 }
