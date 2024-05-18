@@ -7,9 +7,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useAuth } from '@/context/AuthContext';
-import { Ionicons } from '@expo/vector-icons';
-
-
+import { Ionicons, FontAwesome6, Feather } from '@expo/vector-icons';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -58,13 +56,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="feed"
         options={{
-          title: 'Feed',
           headerTitleAlign: 'center',
+          headerTitle: () => <FontAwesome6 name="x-twitter" size={28} color={Colors[colorScheme ?? 'light'].text} />,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
               <Pressable onPress={handleLogout}> 
                 {({ pressed }) => (
-                  <Ionicons name="log-out" size={34} color="black" style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} />
+                  <Feather name="settings" size={24} color={Colors[colorScheme ?? 'light'].text} style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} />
                 )}
               </Pressable>
           ),
