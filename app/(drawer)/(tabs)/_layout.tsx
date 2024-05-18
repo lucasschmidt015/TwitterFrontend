@@ -7,6 +7,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useAuth } from '@/context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 
 
 
@@ -51,8 +52,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
+
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
@@ -61,16 +61,10 @@ export default function TabLayout() {
           title: 'Feed',
           headerTitleAlign: 'center',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          //Here, we have to change the icon <------------
           headerRight: () => (
               <Pressable onPress={handleLogout}> 
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
+                  <Ionicons name="log-out" size={34} color="black" style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} />
                 )}
               </Pressable>
           ),

@@ -2,6 +2,7 @@ import { useRouter, useSegments } from "expo-router";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 import * as SecureStore from 'expo-secure-store';
 import { checkAccessToken } from "@/lib/api/auth";
+import { logout } from "@/lib/api/auth";
 
 const AuthContext = createContext({});
 
@@ -68,14 +69,18 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
         setRefreshToken(newRefreshToken);
     }
 
-    const clearLogin = async () => { // <-------- We'll have to send a request to invalidate the token here
+    const clearLogin = async () => {
         await SecureStore.deleteItemAsync('accessToken');
         await SecureStore.deleteItemAsync('refreshToken');
-
+        
+        //Dispatch a request to invalidate the access and refresh token
+        await logout({
+             accessToken: accessToken as string,
+             refreshToken: refreshToken as string 
+        });
+        
         setAccessToken(null);
         setRefreshToken(null);
-        
-        //setar as states aqui tbm
     }
 
     return (

@@ -59,3 +59,20 @@ export const checkAccessToken = async (data: { accessToken: string, refreshToken
     }
 
 }
+
+export const logout = async (obj: { accessToken: string, refreshToken: string }) => {
+    try {
+        await fetch(`${API_URL}/auth/logout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(obj),
+        });
+
+        return;
+
+    } catch (err) {
+        throw new Error(err);
+    }
+}
