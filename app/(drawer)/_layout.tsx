@@ -3,6 +3,9 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerI
 import { ActivityIndicator, Text, View, StyleSheet, Image } from 'react-native';
 import { useAuth } from "@/context/AuthContext";
 import { FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { getLoggedUserInfo } from "@/lib/api/user";
+import { useEffect, useState } from "react";
+import { User } from '@/types/index'
 
 const DrawerNavigator = createDrawerNavigator().Navigator;
 
@@ -13,6 +16,25 @@ export const unstable_settings = {
 };
 
 function CustomDrawerContent(props) {
+    const { accessToken } = props
+
+    const [userData, setUserData] = useState<User>({id: '', name: '', username: '', image: ''});
+
+    useEffect(() => {
+        const findUser = async () => {
+            try {
+                const userData = await getLoggedUserInfo(accessToken);
+
+                setUserData(userData);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        findUser();
+    }, []);
+
+    
     return (
         <DrawerContentScrollView {...props} >
             <View style={styles.profileContainer}>
@@ -23,8 +45,8 @@ function CustomDrawerContent(props) {
                     <FontAwesome6 name="circle-question" size={20} color="black" style={{marginRight: 7}} />
                 </View>
                 <View style={styles.nameContent}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Lucas-Kratos</Text>
-                    <Text style={{ fontSize: 12, color: 'gray' }}>@lucas_sibr</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{userData.name}</Text>
+                    <Text style={{ fontSize: 12, color: 'gray' }}>@{userData.username}</Text>
                 </View>
 
                 <View style={styles.followersContent}>
@@ -50,7 +72,7 @@ export default function DrawerLayout() {
 
     return (
         <Drawer 
-            drawerContent={(props) => <CustomDrawerContent {...props} />} 
+            drawerContent={(props) => <CustomDrawerContent {...props} accessToken={accessToken}/>} 
             screenOptions={{
                 drawerActiveBackgroundColor: 'transparent', // No background color for active state
                 drawerInactiveTintColor: 'black', // Color for inactive icons
