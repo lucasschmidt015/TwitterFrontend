@@ -18,7 +18,7 @@ export const unstable_settings = {
 function CustomDrawerContent(props) {
     const { accessToken } = props
 
-    const [userData, setUserData] = useState<User>({id: '', name: '', username: '', image: ''});
+    const [userData, setUserData] = useState<User>({id: '', name: '', username: '', image: '', email: ''});
 
     useEffect(() => {
         const findUser = async () => {
