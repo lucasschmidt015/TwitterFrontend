@@ -32,13 +32,14 @@ export const authenticate = async (data: { email: string, emailToken: string }) 
         });
 
         if (res.status !== 200) {
-            throw new Error('Error during the authentication process');
+            const error = await res.json();
+            throw new Error(error.error);
         }
 
         return await res.json();
 
     } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
     }
 }
 
