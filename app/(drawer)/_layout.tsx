@@ -2,7 +2,7 @@ import { Stack, withLayoutContext } from "expo-router";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from "@react-navigation/drawer";
 import { ActivityIndicator, Text, View, StyleSheet, Image } from 'react-native';
 import { useAuth } from "@/context/AuthContext";
-import { FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons, Feather } from '@expo/vector-icons';
 import { getLoggedUserInfo } from "@/lib/api/user";
 import { useEffect, useState } from "react";
 import { User } from '@/types/index'
@@ -74,10 +74,10 @@ export default function DrawerLayout() {
         <Drawer 
             drawerContent={(props) => <CustomDrawerContent {...props} accessToken={accessToken}/>} 
             screenOptions={{
-                drawerActiveBackgroundColor: 'transparent', // No background color for active state
-                drawerInactiveTintColor: 'black', // Color for inactive icons
+                drawerActiveBackgroundColor: 'transparent', 
+                drawerInactiveTintColor: 'black', 
                 drawerLabelStyle: {
-                    color: 'black', // Ensures label color remains consistent
+                    color: 'black', 
                     fontSize: 18,
                 },
             }}>
@@ -85,10 +85,17 @@ export default function DrawerLayout() {
                 name='(tabs)' 
                 options={{ 
                     headerShown: false, 
-                    title: 'Profile', 
-                    drawerIcon: () =>  <Ionicons name="person-outline" size={30} color="black" />
+                    title: 'Home', 
+                    drawerIcon: () =>  <Feather name="home" size={30} color="black" />
                 }}
-            />           
+            />       
+            <Drawer.Screen 
+                name='profile' 
+                options={{
+                    title: 'Profile',
+                    headerShown: false,
+                    drawerIcon: () => <Ionicons name="person-outline" size={30} color="black" />
+                }} />           
             <Drawer.Screen 
                 name='bookmarks' 
                 options={{
