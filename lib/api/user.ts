@@ -45,3 +45,40 @@ export const createNewUser = async (data: User) => {
     }
 
 }
+
+type ImageData = {
+    uri: string;
+    name: string;
+    type: string;
+};
+
+export const updateProfilePicture = async (imageData: ImageData) => {
+
+    const formData = new FormData();
+    formData.append('photo', {
+        uri: imageData.uri,
+        name: imageData.name,
+        type: imageData.type,
+    });
+
+    try {
+        const response = fetch(`${API_URL}/user/updateProfilePicture`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.status !== 201) {
+            
+            throw new Error(data.error);
+        }
+
+        return data;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}

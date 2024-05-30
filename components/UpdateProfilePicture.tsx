@@ -1,11 +1,52 @@
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native'
+import React, { useState } from 'react'
 import { Button, Icon } from '@rneui/themed';
+import * as ImagePicker from 'expo-image-picker';
+import { updateProfilePicture } from '@/lib/api/user';
 
 export default function UpdateProfilePicture({ closeButton }) {
 
-  const onPressSave = () => {
+  const [image, setImage] = useState(null);
 
+  const onPressLoadImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const selectedImage = result.assets[0];
+      setImage({
+        uri: selectedImage.uri,
+        name: selectedImage.fileName || `photo.${selectedImage.type.split('/')[1]}`, 
+        type: selectedImage.type,
+      });
+    }
+
+  }
+
+  const onPressSave = async () => { // I haven't tested it yet, we need to continue here later <------------------
+    
+    if (!image) {
+      return;
+    }
+
+    try {
+      await updateProfilePicture(image);
+
+      setImage(null);
+
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -15,7 +56,12 @@ export default function UpdateProfilePicture({ closeButton }) {
             <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#505050' }}>Update the profile picture</Text>
           </View>
           <View style={styles.imageConainer}>
-            <Image style={styles.profilePicture} src='https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg' />
+            <TouchableWithoutFeedback onPress={onPressLoadImage}>
+              <Image style={styles.profilePicture} source={ image ? { uri: image.uri } : { uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg' } } />
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={onPressLoadImage}>
+              <Image style={styles.blankPicture} source={require('../assets/images/blankProfile.png')} />
+            </TouchableWithoutFeedback>
           </View>
           <View style={styles.saveButtonContainer}>
             <Button radius={"sm"} type="solid" buttonStyle={{width: 95, backgroundColor: '#FF3A3A'} } onPress={closeButton}>
@@ -59,7 +105,7 @@ const styles = StyleSheet.create({
       width: '100%',
       height: '70%',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     profilePicture: {
       width: 300,
@@ -67,6 +113,12 @@ const styles = StyleSheet.create({
       borderRadius: 150,
       borderWidth: 5,
       borderColor: '#000'
+    },
+    blankPicture: {
+      position: 'absolute', 
+      width: 300, 
+      height: 300,
+      opacity: 0.8
     },
     saveButtonContainer: {
       justifyContent: 'flex-end', 
