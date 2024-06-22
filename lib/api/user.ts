@@ -52,19 +52,19 @@ type ImageData = {
     type: string;
 };
 
-export const updateProfilePicture = async (imageData: ImageData) => {
-
+export const updateProfilePicture = async (imageData: ImageData, accessToken : string) => {
     const formData = new FormData();
-    formData.append('photo', {
+    formData.append('image', {
         uri: imageData.uri,
         name: imageData.name,
         type: imageData.type,
     });
 
     try {
-        const response = fetch(`${API_URL}/user/updateProfilePicture`, {
+        const response = await fetch(`${API_URL}/user/updateProfilePicture`, {
             method: 'POST',
             headers: {
+                Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'multipart/form-data',
             },
             body: formData,
@@ -78,6 +78,7 @@ export const updateProfilePicture = async (imageData: ImageData) => {
         }
 
         return data;
+        
     } catch (err) {
         throw new Error(err.message);
     }

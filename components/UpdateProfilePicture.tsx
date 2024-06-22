@@ -3,10 +3,13 @@ import React, { useState } from 'react'
 import { Button, Icon } from '@rneui/themed';
 import * as ImagePicker from 'expo-image-picker';
 import { updateProfilePicture } from '@/lib/api/user';
+import { useAuth } from '@/context/AuthContext';
 
 export default function UpdateProfilePicture({ closeButton }) {
 
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<{ uri: string, name: string, type: string } | null>(null);
+
+  const { accessToken } = useAuth();
 
   const onPressLoadImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -24,10 +27,11 @@ export default function UpdateProfilePicture({ closeButton }) {
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
+
       setImage({
         uri: selectedImage.uri,
-        name: selectedImage.fileName || `photo.${selectedImage.type.split('/')[1]}`, 
-        type: selectedImage.type,
+        name: selectedImage.fileName || `photo_${new Date().toISOString().replace(/[:.]/g, '-')}.${selectedImage.mimeType.split('/')[1]}`,
+        type: selectedImage.mimeType as string,
       });
     }
 
@@ -40,7 +44,7 @@ export default function UpdateProfilePicture({ closeButton }) {
     }
 
     try {
-      await updateProfilePicture(image);
+      await updateProfilePicture(image, accessToken);
 
       setImage(null);
 
