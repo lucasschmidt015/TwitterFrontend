@@ -2,15 +2,24 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { EvilIcons } from '@expo/vector-icons';
 import UpdateProfilePicture from '@/components/UpdateProfilePicture';
+import { useAuth } from '@/context/AuthContext';
+import { generalContext } from '@/context/GeneralContext';
 
 export default function Profile() {
 
   const [showUpdateProfilePicture, setShowUpdateProfilePicure] = useState(false);
 
+  const { loggedUser } = useAuth();
+  const { driveURL } = generalContext();
+
   const onPressProfilePicture = () => {
 
     setShowUpdateProfilePicure(!showUpdateProfilePicture);
 
+  }
+
+  if (!loggedUser) {
+    return <></>
   }
 
   return (
@@ -39,7 +48,7 @@ export default function Profile() {
 
         <View style={styles.profilePictureContainer}>
           <Pressable onPress={onPressProfilePicture}>
-            <Image style={styles.profilePicture} src='https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg' />
+            <Image style={loggedUser.image ? styles.profilePicture : styles.profilePictureEmpty} src={loggedUser.image ? `${driveURL}${loggedUser.image}`: `${driveURL}1w3UY2U76y6flPEoA_wanrgHZY2zhUWML`} />
           </Pressable>
         </View>
       </View>
@@ -76,4 +85,12 @@ const styles = StyleSheet.create({
         borderWidth: 4,
         borderColor: '#FFF'
     },
+    profilePictureEmpty: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      borderWidth: 1,
+      borderColor: '#c4c2c2',
+      backgroundColor: '#ffffff',
+  },
 })

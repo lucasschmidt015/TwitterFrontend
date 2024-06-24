@@ -1,15 +1,33 @@
 import { View, Text, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Icon } from '@rneui/themed';
 import * as ImagePicker from 'expo-image-picker';
 import { updateProfilePicture } from '@/lib/api/user';
 import { useAuth } from '@/context/AuthContext';
+import { generalContext } from '@/context/GeneralContext';
 
 export default function UpdateProfilePicture({ closeButton }) {
 
   const [image, setImage] = useState<{ uri: string, name: string, type: string } | null>(null);
+  const [pathImage, setPathImage] = useState< string | null >(null);
 
-  const { accessToken } = useAuth();
+  const { accessToken, loggedUser, setLoggedUser } = useAuth();
+
+  const { driveURL } = generalContext();
+
+  useEffect(() => {
+    const findPath = () => {
+      if (!loggedUser) {
+        return;
+      }
+
+      const path = loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}1w3UY2U76y6flPEoA_wanrgHZY2zhUWML`;
+      setPathImage(path);
+    }
+
+
+    findPath();
+  }, [loggedUser])
 
   const onPressLoadImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -44,9 +62,12 @@ export default function UpdateProfilePicture({ closeButton }) {
     }
 
     try {
-      await updateProfilePicture(image, accessToken);
+      const updatedUser = await updateProfilePicture(image, accessToken); 
 
-      setImage(null);
+      if (updatedUser) {
+        setLoggedUser(updatedUser);
+        setImage(null);
+      }
 
     } catch(err) {
       console.log(err);
@@ -61,7 +82,7 @@ export default function UpdateProfilePicture({ closeButton }) {
           </View>
           <View style={styles.imageConainer}>
             <TouchableWithoutFeedback onPress={onPressLoadImage}>
-              <Image style={styles.profilePicture} source={ image ? { uri: image.uri } : { uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg' } } />
+              <Image style={styles.profilePicture} source={ image ? { uri: image.uri } : { uri: pathImage } } />
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={onPressLoadImage}>
               <Image style={styles.blankPicture} source={require('../assets/images/blankProfile.png')} />

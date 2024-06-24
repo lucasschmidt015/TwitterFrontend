@@ -3,9 +3,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerI
 import { ActivityIndicator, Text, View, StyleSheet, Image } from 'react-native';
 import { useAuth } from "@/context/AuthContext";
 import { FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons, Feather } from '@expo/vector-icons';
-import { getLoggedUserInfo } from "@/lib/api/user";
-import { useEffect, useState } from "react";
-import { User } from '@/types/index'
+import { generalContext } from "@/context/GeneralContext";
 
 const DrawerNavigator = createDrawerNavigator().Navigator;
 
@@ -16,37 +14,25 @@ export const unstable_settings = {
 };
 
 function CustomDrawerContent(props) {
-    const { accessToken } = props
+    const { driveURL } = generalContext();
+    const { loggedUser } = useAuth();
 
-    const [userData, setUserData] = useState<User>({id: '', name: '', username: '', image: '', email: ''});
+    if (!loggedUser) {
+         return <ActivityIndicator />
+    }
 
-    useEffect(() => {
-        const findUser = async () => {
-            try {
-                const userData = await getLoggedUserInfo(accessToken);
-
-                setUserData(userData);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        findUser();
-    }, []);
-
-    
     return (
         <DrawerContentScrollView {...props} >
             <View style={styles.profileContainer}>
                 <View style={styles.iconRow}>
                     <Image 
-                        src='https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg' 
-                        style={{ width: 32, aspectRatio: 1, borderRadius: 40 }}/>
+                        src={loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}1w3UY2U76y6flPEoA_wanrgHZY2zhUWML`}
+                        style={{ width: 54, aspectRatio: 1, borderRadius: 40 }}/>
                     <FontAwesome6 name="circle-question" size={20} color="black" style={{marginRight: 7}} />
                 </View>
                 <View style={styles.nameContent}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{userData.name}</Text>
-                    <Text style={{ fontSize: 12, color: 'gray' }}>@{userData.username}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{loggedUser.name}</Text>
+                    <Text style={{ fontSize: 12, color: 'gray' }}>@{loggedUser.username}</Text>
                 </View>
 
                 <View style={styles.followersContent}>

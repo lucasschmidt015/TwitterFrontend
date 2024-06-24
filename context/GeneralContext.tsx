@@ -13,12 +13,14 @@ const GeneralContext = createContext({});
 
 const GeneralContextProvider = ({ children }: PropsWithChildren) => {
 
+    const driveURL = "https://drive.google.com/uc?export=view&id=";
+
     const showToast = (args: ToastArgs) => {
         Toast.show(args);
     }
 
     return (
-        <GeneralContext.Provider value={{showToast}}>
+        <GeneralContext.Provider value={{showToast, driveURL}}>
             {children}
             <Toast/>
         </GeneralContext.Provider>

@@ -3,6 +3,8 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 import * as SecureStore from 'expo-secure-store';
 import { checkAccessToken } from "@/lib/api/auth";
 import { logout } from "@/lib/api/auth";
+import { getLoggedUserInfo } from "@/lib/api/user";
+import { User } from "@/types";
 
 const AuthContext = createContext({});
 
@@ -10,6 +12,7 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
 
     const [accessToken, setAccessToken] = useState< string | null >(null);
     const [refreshToken, setRefreshToken] = useState< string | null >(null);
+    const [loggedUser, setLoggedUser] = useState< User | null >(null);
 
     const segments = useSegments();
     const router = useRouter();
@@ -61,6 +64,20 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
         loadApplicationToken();
     }, []);
 
+    useEffect(() => {
+        const loadLoggedUser = async () => {
+            if (!accessToken) {
+                return;
+            }
+
+            const response = await getLoggedUserInfo(accessToken);
+
+            setLoggedUser(response);
+        }
+
+        loadLoggedUser();
+    }, [accessToken]);
+
     const updateAuthToken = async (newAccessToken: string, newRefreshToken: string) => {
         await SecureStore.setItemAsync('accessToken', newAccessToken);
         await SecureStore.setItemAsync('refreshToken', newRefreshToken);
@@ -84,7 +101,7 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
     }
 
     return (
-        <AuthContext.Provider value={{ accessToken, updateAuthToken, clearLogin }}>
+        <AuthContext.Provider value={{ accessToken, updateAuthToken, clearLogin, loggedUser, setLoggedUser }}>
             {children}
         </AuthContext.Provider>
     );
