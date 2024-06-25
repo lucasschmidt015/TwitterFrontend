@@ -10,10 +10,11 @@ export default function UpdateProfilePicture({ closeButton }) {
 
   const [image, setImage] = useState<{ uri: string, name: string, type: string } | null>(null);
   const [pathImage, setPathImage] = useState< string | null >(null);
+  const [isLoading, setIsLoading] = useState< Boolean >(false);
 
   const { accessToken, loggedUser, setLoggedUser } = useAuth();
 
-  const { driveURL } = generalContext();
+  const { driveURL, showToast, defaultImageId } = generalContext();
 
   useEffect(() => {
     const findPath = () => {
@@ -21,7 +22,7 @@ export default function UpdateProfilePicture({ closeButton }) {
         return;
       }
 
-      const path = loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}1w3UY2U76y6flPEoA_wanrgHZY2zhUWML`;
+      const path = loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}${defaultImageId}`;
       setPathImage(path);
     }
 
@@ -55,22 +56,37 @@ export default function UpdateProfilePicture({ closeButton }) {
 
   }
 
-  const onPressSave = async () => { // I haven't tested it yet, we need to continue here later <------------------
+  const onPressSave = async () => { 
     
     if (!image) {
       return;
     }
 
     try {
-      const updatedUser = await updateProfilePicture(image, accessToken); 
+      setIsLoading(true);
+
+      const { updatedUser, success } = await updateProfilePicture(image, accessToken); 
 
       if (updatedUser) {
         setLoggedUser(updatedUser);
-        setImage(null);
+        closeButton();
+        showToast({
+          type: 'success',
+          text1: 'Success!!!',
+          text2: success,
+          visibilityTime: 5000,
+        });
       }
-
     } catch(err) {
-      console.log(err);
+      showToast({
+        type: 'error',
+        text1: 'Oops!!!',
+        text2: err.message,
+        visibilityTime: 5000,
+      });
+    }
+    finally {
+      setIsLoading(false);
     }
   }
 
@@ -93,7 +109,7 @@ export default function UpdateProfilePicture({ closeButton }) {
               Cancel
               <Icon name="close" color="white" iconStyle={{ paddingLeft: 5 }}/>
             </Button>
-            <Button radius={"sm"} type="solid" buttonStyle={{width: 95, marginLeft: 5} } onPress={onPressSave}>
+            <Button radius={"sm"} type="solid" loading={ isLoading } buttonStyle={{width: 95, marginLeft: 5} } onPress={onPressSave}>
               Update
               <Icon name="save" color="white" iconStyle={{ paddingLeft: 5 }}/>
             </Button>
@@ -114,7 +130,7 @@ const styles = StyleSheet.create({
     },
     formPicture: {
       width: '90%',
-      height: '50%',
+      height: '60%',
       borderWidth: 1,
       borderColor: '#DEDDDD',
       backgroundColor:'#fff',

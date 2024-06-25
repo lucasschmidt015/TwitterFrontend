@@ -14,7 +14,7 @@ export const unstable_settings = {
 };
 
 function CustomDrawerContent(props) {
-    const { driveURL } = generalContext();
+    const { driveURL, defaultImageId } = generalContext();
     const { loggedUser } = useAuth();
 
     if (!loggedUser) {
@@ -26,7 +26,7 @@ function CustomDrawerContent(props) {
             <View style={styles.profileContainer}>
                 <View style={styles.iconRow}>
                     <Image 
-                        src={loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}1w3UY2U76y6flPEoA_wanrgHZY2zhUWML`}
+                        src={loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}${defaultImageId}`}
                         style={{ width: 54, aspectRatio: 1, borderRadius: 40 }}/>
                     <FontAwesome6 name="circle-question" size={20} color="black" style={{marginRight: 7}} />
                 </View>

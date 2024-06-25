@@ -10,7 +10,7 @@ export default function Profile() {
   const [showUpdateProfilePicture, setShowUpdateProfilePicure] = useState(false);
 
   const { loggedUser } = useAuth();
-  const { driveURL } = generalContext();
+  const { driveURL, defaultImageId } = generalContext();
 
   const onPressProfilePicture = () => {
 
@@ -48,7 +48,7 @@ export default function Profile() {
 
         <View style={styles.profilePictureContainer}>
           <Pressable onPress={onPressProfilePicture}>
-            <Image style={loggedUser.image ? styles.profilePicture : styles.profilePictureEmpty} src={loggedUser.image ? `${driveURL}${loggedUser.image}`: `${driveURL}1w3UY2U76y6flPEoA_wanrgHZY2zhUWML`} />
+            <Image style={loggedUser.image ? styles.profilePicture : styles.profilePictureEmpty} src={loggedUser.image ? `${driveURL}${loggedUser.image}`: `${driveURL}${defaultImageId}`} />
           </Pressable>
         </View>
       </View>

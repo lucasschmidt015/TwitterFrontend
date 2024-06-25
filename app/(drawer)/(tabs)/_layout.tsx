@@ -7,6 +7,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useAuth } from '@/context/AuthContext';
+import { generalContext } from '@/context/GeneralContext';
 import { Ionicons, FontAwesome6, Feather } from '@expo/vector-icons';
 
 export const unstable_settings = {
@@ -26,11 +27,17 @@ function TabBarIcon(props: {
 function AvatarHeader() {
 
   const navigation = useNavigation();
+  const { driveURL, defaultImageId } = generalContext();
+  const { loggedUser } = useAuth();
+
+  if (!loggedUser) {
+    return <></>;
+  }
 
   return (
     <Pressable onPress={() => navigation.openDrawer()}>
       <Image 
-          src='https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg' 
+          src={loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}${defaultImageId}`} 
           style={{ width: 30, aspectRatio: 1, borderRadius: 40, marginLeft: 10 }} />
     </Pressable>
   );

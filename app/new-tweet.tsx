@@ -3,16 +3,13 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tweetsApi } from "@/lib/api/tweets";
-
-const user = {
-    id: '123456789',
-    name: 'Jeff B',
-    username: 'bezos',
-    image: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/jeff.jpeg',
-}
+import { useAuth } from "@/context/AuthContext";
+import { generalContext } from "@/context/GeneralContext";
 
 export default function NewTweet() {
 
+    const { driveURL, defaultImageId } = generalContext();
+    const { loggedUser } = useAuth();
     const { postNewTweet } = tweetsApi();
 
     const [tweetText, setTweetText] = useState('');
@@ -53,7 +50,7 @@ export default function NewTweet() {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Image src={user.image} style={styles.image}/>
+                    <Image src={loggedUser.image ? `${driveURL}${loggedUser.image}` : `${driveURL}${defaultImageId}`} style={styles.image}/>
                     <TextInput 
                         value={tweetText}
                         placeholder="What's happening?" 
