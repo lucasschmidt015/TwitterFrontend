@@ -4,8 +4,8 @@ import { EvilIcons } from '@expo/vector-icons';
 import UpdateProfilePicture from '@/components/UpdateProfilePicture';
 import { useAuth } from '@/context/AuthContext';
 import { generalContext } from '@/context/GeneralContext';
-import { Button, Icon } from '@rneui/themed';
 import { useRouter } from 'expo-router';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 export default function Profile() {
 
@@ -34,22 +34,12 @@ export default function Profile() {
         <Image source={require('../../assets/images/X.jpeg')} style={styles.backgroundImage}/>
         <View style={styles.infoArea}>
           <View style={{ marginBottom: 10 }}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', alignItems: "center" }}>
                 <Text style={{ fontWeight: 'bold', fontSize: 22, marginBottom: 2, marginRight: 10 }}>{loggedUser.name}</Text>
-                <Button 
-                    radius={"sm"} 
-                    type="outline" 
-                    size='sm' 
-                    buttonStyle={{width: 70, backgroundColor: '#c7c7c7', borderWidth: 0}} 
-                    titleStyle={{ color: "#000" }} 
-                    iconPosition="right"
-                    onPress={onPressEditProfile}
-                  >
-                  Edit
-                  <Icon name="edit" color="white" iconStyle={{ paddingRight: 5 }}/>
-                </Button>
+                <Pressable onPress={onPressEditProfile}>
+                  <FontAwesome5 name="user-edit" size={20} color="black" iconStyle={{ paddingRight: 5 }}/>
+                </Pressable>
               </View>
-              
               <Text style={{ color: 'gray' }}>@{loggedUser.username}</Text>
           </View>
           <Text style={{ color: 'gray', fontSize: 14 }}>{loggedUser.bio}</Text>
@@ -82,7 +72,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#E0E0E0',
+        backgroundColor: '#eeecec',
     },
     backgroundImage: {
         width: 500,
