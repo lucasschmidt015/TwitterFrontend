@@ -4,6 +4,8 @@ import { EvilIcons } from '@expo/vector-icons';
 import UpdateProfilePicture from '@/components/UpdateProfilePicture';
 import { useAuth } from '@/context/AuthContext';
 import { generalContext } from '@/context/GeneralContext';
+import { Button, Icon } from '@rneui/themed';
+import { useRouter } from 'expo-router';
 
 export default function Profile() {
 
@@ -11,11 +13,15 @@ export default function Profile() {
 
   const { loggedUser } = useAuth();
   const { driveURL, defaultImageId } = generalContext();
+  const router = useRouter();
+  
 
   const onPressProfilePicture = () => {
-
     setShowUpdateProfilePicure(!showUpdateProfilePicture);
+  }
 
+  const onPressEditProfile = () => {
+      router.push({pathname: '/editProfile'});
   }
 
   if (!loggedUser) {
@@ -28,10 +34,25 @@ export default function Profile() {
         <Image source={require('../../assets/images/X.jpeg')} style={styles.backgroundImage}/>
         <View style={styles.infoArea}>
           <View style={{ marginBottom: 10 }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 22, marginBottom: 2 }}>Lucas-Kratos</Text>
-              <Text style={{ color: 'gray' }}>@lucas_sibr</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 22, marginBottom: 2, marginRight: 10 }}>{loggedUser.name}</Text>
+                <Button 
+                    radius={"sm"} 
+                    type="outline" 
+                    size='sm' 
+                    buttonStyle={{width: 70, backgroundColor: '#c7c7c7', borderWidth: 0}} 
+                    titleStyle={{ color: "#000" }} 
+                    iconPosition="right"
+                    onPress={onPressEditProfile}
+                  >
+                  Edit
+                  <Icon name="edit" color="white" iconStyle={{ paddingRight: 5 }}/>
+                </Button>
+              </View>
+              
+              <Text style={{ color: 'gray' }}>@{loggedUser.username}</Text>
           </View>
-          <Text style={{ color: 'gray', fontSize: 14 }}>My bio here</Text>
+          <Text style={{ color: 'gray', fontSize: 14 }}>{loggedUser.bio}</Text>
           
           <View style={{ flexDirection: 'row', marginVertical: 10, alignItems: 'center' }}>
               <EvilIcons name="calendar" size={22} color="gray" />

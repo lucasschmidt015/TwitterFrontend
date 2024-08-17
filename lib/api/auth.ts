@@ -45,7 +45,7 @@ export const authenticate = async (data: { email: string, emailToken: string }) 
 
 export const checkAccessToken = async (data: { accessToken: string, refreshToken: string }) => {
     try {
-        const res = await fetch(`${API_URL}/auth/checkAccessToken`, {
+        const res = await fetch(`${API_URL}/auth/refreshToken`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

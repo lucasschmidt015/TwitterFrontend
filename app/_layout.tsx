@@ -63,6 +63,7 @@ function RootLayoutNav() {
                 <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
                 <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
                 <Stack.Screen name="new-tweet" options={{ title: 'New Tweet', headerShown: false }}/>
+                <Stack.Screen name="editProfile" options={{ title: 'Edit Profile', headerShown: false }}/>
 
 
                 <Stack.Screen name="(auth)/signIn" options={{ title: 'Sign In', headerShown: false }} />

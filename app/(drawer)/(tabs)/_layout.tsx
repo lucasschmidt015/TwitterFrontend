@@ -8,7 +8,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useAuth } from '@/context/AuthContext';
 import { generalContext } from '@/context/GeneralContext';
-import { Ionicons, FontAwesome6, Feather } from '@expo/vector-icons';
+import { FontAwesome6, Feather } from '@expo/vector-icons';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
