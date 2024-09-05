@@ -1,8 +1,9 @@
 export type User = {
-    id: String;
+    id?: String;
     name: String;
     username: String;
     image?: String;  
+    email: String
 }
   
 export type TweetType = {

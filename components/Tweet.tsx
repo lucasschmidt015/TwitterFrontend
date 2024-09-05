@@ -4,17 +4,21 @@ import { Entypo } from '@expo/vector-icons';
 import { TweetType } from '@/types';
 import IconButton from './iconButton';
 import { Link } from 'expo-router';
+import { generalContext } from '@/context/GeneralContext';
 
 type TweetProps = {
   tweet: TweetType;
 }
 
 const Tweet = ({ tweet }: TweetProps) => {
+
+  const { driveURL, defaultImageId } = generalContext();
+  
     return (
       <Link href={`/feed/tweet/${tweet.id}`} asChild> 
         <Pressable style={styles.container}>
             <Image 
-                src={tweet.user.image} 
+                src={tweet.user.image ? `${driveURL}${tweet.user.image}` : `${driveURL}${defaultImageId}`} 
                 style={styles.userImage}
             />
 
